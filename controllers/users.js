@@ -76,7 +76,7 @@ router.post('/login', async (req, res) => {
             res.redirect('/users/login?message=' + badCredentialMessage)
         } else {
             // if the user is found and their password matches log them in
-            console.log('loggin user in!')
+            console.log('logging user in!')
             // ecrypt the new user's id and convert it to a string
             const encryptedId = crypto.AES.encrypt(String(user.id), process.env.SECRET)
             const encryptedIdString = encryptedId.toString()
