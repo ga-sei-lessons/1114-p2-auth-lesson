@@ -71,13 +71,17 @@ router.post('/login', async (req, res) => {
         if (!user) {
             // if the user isn't found in the db 
             res.redirect('/users/login?message=' + badCredentialMessage)
-        } else if (user.password !== req.body.password) {
+        } else if (!bcrypt.compareSync(req.body.password, user.password)) {
             // if the user's supplied password is incorrect
             res.redirect('/users/login?message=' + badCredentialMessage)
         } else {
             // if the user is found and their password matches log them in
             console.log('loggin user in!')
-            res.cookie('userId', user.id)
+            // ecrypt the new user's id and convert it to a string
+            const encryptedId = crypto.AES.encrypt(String(user.id), process.env.SECRET)
+            const encryptedIdString = encryptedId.toString()
+            // place the encrypted id in a cookie
+            res.cookie('userId', encryptedIdString)
             res.redirect('/users/profile')
         }
     } catch (err) {
